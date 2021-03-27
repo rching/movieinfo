@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_movie_list"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="@dimen/item_offset"
-        android:scrollbars="none" />
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_movie_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="@dimen/item_offset"
+            android:scrollbars="none" />
+
+        <RelativeLayout
+            android:id="@+id/bannerAdContainer"
+            android:layout_width="400dp"
+            android:layout_height="190dp"
+
+            android:gravity="right|center_horizontal"
+            android:visibility="visible"></RelativeLayout>
+    </RelativeLayout>
+
 </layout>
+
+
+

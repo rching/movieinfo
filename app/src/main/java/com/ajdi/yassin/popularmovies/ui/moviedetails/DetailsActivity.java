@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.ajdi.yassin.popularmovies.R;
 import com.ajdi.yassin.popularmovies.data.local.model.MovieDetails;
@@ -15,13 +18,25 @@ import com.ajdi.yassin.popularmovies.databinding.ActivityDetailsBinding;
 import com.ajdi.yassin.popularmovies.ui.moviedetails.cast.CastAdapter;
 import com.ajdi.yassin.popularmovies.ui.moviedetails.reviews.ReviewsAdapter;
 import com.ajdi.yassin.popularmovies.ui.moviedetails.trailers.TrailersAdapter;
+import com.ajdi.yassin.popularmovies.ui.movieslist.AudienceNetworkInitializeHelper;
 import com.ajdi.yassin.popularmovies.utils.Constants;
 import com.ajdi.yassin.popularmovies.utils.Injection;
 import com.ajdi.yassin.popularmovies.utils.UiUtils;
 import com.ajdi.yassin.popularmovies.utils.ViewModelFactory;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdExperienceType;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSettings;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.RewardData;
+import com.facebook.ads.RewardedVideoAd;
+import com.facebook.ads.S2SRewardedVideoAdListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ShareCompat;
@@ -32,7 +47,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements S2SRewardedVideoAdListener {
 
     public static final String EXTRA_MOVIE_ID = "extra_movie_id";
 
@@ -41,6 +56,88 @@ public class DetailsActivity extends AppCompatActivity {
     private ActivityDetailsBinding mBinding;
 
     private MovieDetailsViewModel mViewModel;
+    //fb ad
+    private FrameLayout bannerAdContainer;
+    private @Nullable
+    RewardedVideoAd rewardedVideoAd;
+
+    private void loadAdView() {
+        if (rewardedVideoAd != null) {
+            rewardedVideoAd.destroy();
+            rewardedVideoAd = null;
+        }
+
+
+        rewardedVideoAd =
+                    new RewardedVideoAd(this, "1580833685460344_1581236835420029");
+        RewardedVideoAd.RewardedVideoLoadAdConfig loadAdConfig =
+                rewardedVideoAd
+                        .buildLoadAdConfig()
+                        .withAdListener(this)
+                        .withFailOnCacheFailureEnabled(true)
+                        .withRewardData(new RewardData("YOUR_USER_ID", "YOUR_REWARD", 10))
+                        .withAdExperience(
+                                 AdExperienceType.AD_EXPERIENCE_TYPE_REWARDED)
+                        .build();
+        rewardedVideoAd.loadAd(loadAdConfig);
+
+
+
+        // Reposition the ad and add it to the view hierarchy.
+       // bannerAdContainer.addView(rewardedVideoAd);
+        // Initiate a request to load an ad.
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+        Log.d("video ad","Rewarded Video View Complete");
+    }
+
+    @Override
+    public void onLoggingImpression(Ad ad) {
+        Log.d("video ad","Rewarded Video Impression");
+    }
+
+    @Override
+    public void onRewardedVideoClosed() {
+        Log.d("video ad","Rewarded Video Closed");
+    }
+
+    @Override
+    public void onRewardServerFailed() {
+        Log.d("video ad","Reward Video Server Failed");
+    }
+
+    @Override
+    public void onRewardServerSuccess() {
+        Log.d("video ad","Reward Video Server Succeeded");
+    }
+    @Override
+    public void onError(Ad ad, AdError error) {
+        if (ad == rewardedVideoAd) {
+            Log.d("video ad","Ad failed to load: " + error.getErrorMessage());
+        }
+    }
+
+    @Override
+    public void onAdLoaded(Ad ad) {
+        if (rewardedVideoAd == null
+                || !rewardedVideoAd.isAdLoaded()
+                || rewardedVideoAd.isAdInvalidated()) {
+            Log.d("video ad","Ad not loaded. Click load to request an ad.");
+        } else {
+            rewardedVideoAd.show();
+            Log.d("video ad","ok");
+        }
+
+    }
+
+    @Override
+    public void onAdClicked(Ad ad) {
+        Toast.makeText(this, "Ad Clicked", Toast.LENGTH_SHORT).show();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +176,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mViewModel.retry(movieId);
+
             }
         });
         // Observe snackbar messages
@@ -88,6 +186,12 @@ public class DetailsActivity extends AppCompatActivity {
                 Snackbar.make(mBinding.getRoot(), message, Snackbar.LENGTH_SHORT).show();
             }
         });
+
+        AudienceNetworkInitializeHelper.initialize(this);
+        loadAdView();
+
+
+
     }
 
     private void setupToolbar() {

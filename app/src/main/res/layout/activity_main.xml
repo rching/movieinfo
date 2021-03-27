@@ -18,17 +18,18 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="595dp"
         android:layout_marginBottom="?attr/actionBarSize"
         android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
     </FrameLayout>
+
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -46,6 +47,9 @@
             app:itemTextColor="@color/bottom_nav_item_colors"
             app:menu="@menu/bottom_navigation" />
 
+
+
+
         <!--This border vector was inspired by Chris Banes's tivi app-->
         <ImageView
             android:layout_width="match_parent"
@@ -54,6 +58,17 @@
             android:contentDescription="@string/bottom_navigation_border"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/bottom_nav_border" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/bannerAdContainer"
+        android:layout_width="match_parent"
+        android:layout_height="81dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

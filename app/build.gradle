@@ -30,8 +30,14 @@ android {
     }
 }
 
+
+dependencies {
+    compile 'com.facebook.android:audience-network-sdk:6.+'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 
     // Support libs
     def support_lib_version = '1.0.0'

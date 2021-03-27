@@ -61,6 +61,16 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/PopupOverlay" />
 
+                <FrameLayout
+                    android:id="@+id/bannerAdContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="190dp"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    android:clipToPadding="false"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                </FrameLayout>
+
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 

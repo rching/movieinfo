@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * @author Yassin Ajdi.
  */
-public class TrailersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class TrailersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Trailer> trailerList;
 
